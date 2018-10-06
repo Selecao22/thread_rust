@@ -13,7 +13,7 @@ fn main() {
     let start_time = Instant::now();
     let mx = Arc::new(Mutex::new(0));
 
-    for i in 0..5
+    for i in 1..=5
     {
         let mux = Arc::clone(&mx);
         let time = rand::random::<u64>() % MAX_TIME;
