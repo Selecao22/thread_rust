@@ -5,6 +5,7 @@ use std::time::{Duration, Instant};
 use std::sync::{Arc, Mutex};
 use std::io;
 
+const MAX_THREAD_COUNT: u8 = 5;
 const MAX_TIME: u64 = 6;
 const MAX_VALUE: u64 = 12;
 
@@ -14,15 +15,14 @@ fn main() {
         let mx = Arc::new(Mutex::new(0));
         let start_time = Instant::now();
 
-        for i in 1..=5
+        for i in 1..=MAX_THREAD_COUNT
         {
             let mux = Arc::clone(&mx);
             let time = rand::random::<u64>() % MAX_TIME;
-            let tt = i;
             let handle = thread::spawn(move || {
                 thread::sleep(Duration::from_secs(time));
                 let mut num = mux.lock().unwrap();
-                println!("Поток № {}", tt);
+                println!("Поток № {}", i);
                 println!("Спал {} с", time);
                 *num = rand::random::<u64>() % MAX_VALUE;
                 println!("Значение, которое утановил поток {}\n", *num);
@@ -41,10 +41,10 @@ fn main() {
 //        thread::sleep(Duration::from_secs(6));
         let time_line = start_time.elapsed();
         println!("Последнее значение в мьютексе {}", *mx.lock().unwrap());
-        println!("Программа выполнилась за {},{} мкс",
+        println!("Программа выполнилась за {},{} с",
             time_line.as_secs(),
             time_line.subsec_micros());
-            
+
         println!("Повторить прогу?");
         let mut answer = String::new();
         io::stdin().read_line(&mut answer).unwrap();
