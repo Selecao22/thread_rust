@@ -11,13 +11,10 @@ const MAX_VALUE: u64 = 12;
 fn main() {
 
     let mut handles = vec![];
-    let close = "n".to_string();
     let mx = Arc::new(Mutex::new(0));
     let start_time = Instant::now();
-    let mut answer = String::new();
 
-    while close != answer.trim_right() {
-        answer = "".to_string();
+    loop {
         for i in 1..=5
         {
             let mux = Arc::clone(&mx);
@@ -35,7 +32,7 @@ fn main() {
             handles.push(handle);
 
         }
-    
+
 
 //    for h in handles
 //    {
@@ -46,7 +43,11 @@ fn main() {
         println!("Последнее значение в мьютексе {}", *mx.lock().unwrap());
         println!("Программа выполнилась за {} с", Instant::now().duration_since(start_time).as_secs());
         println!("Повторить прогу?");
+        let mut answer = String::new();
         io::stdin().read_line(&mut answer).unwrap();
+        if answer.as_str() == "n"{
+            break;
+        }
     }
 
 }
